@@ -41,11 +41,17 @@ function Accueil() {
         </div>
       </nav>
 
-      <div style={{ background: 'linear-gradient(rgba(26,58,107,0.75), rgba(26,58,107,0.75)), url(https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Essaouira_ramparts.jpg/1280px-Essaouira_ramparts.jpg) center/cover', padding: '80px 32px',textAlign: 'center' }}>
-        <h1 style={{ color: 'white', fontSize: '36px', fontWeight: '600', marginBottom: '12px', maxWidth: '500px',margin:'0 auto 12px' }}>L'Art Émergent du Maroc</h1>
-        <p style={{ color: '#c8d8f0', fontSize: '16px', marginBottom: '28px' }}>Achetez des oeuvres originales à moins de 200 €</p>
-        <button onClick={() => navigate('/galerie')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '8px', fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}>Explorer les Oeuvres</button>
-      </div>
+     <div style={{ background: 'linear-gradient(rgba(26,58,107,0.75), rgba(26,58,107,0.75)), url(https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Essaouira_ramparts.jpg/1280px-Essaouira_ramparts.jpg) center/cover', padding: '80px 32px', textAlign: 'center' }}>
+  <h1 style={{ color: 'white', fontSize: '36px', fontWeight: '600', maxWidth: '500px', margin: '0 auto 12px', animation: 'fadeInDown 1s ease forwards' }}>
+    L'Art Émergent du Maroc
+  </h1>
+  <p style={{ color: '#c8d8f0', fontSize: '16px', marginBottom: '28px', animation: 'fadeInUp 1s ease 0.3s forwards', opacity: 0 }}>
+    Achetez des oeuvres originales à moins de 200 €
+  </p>
+  <button onClick={() => navigate('/galerie')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '8px', fontSize: '15px', fontWeight: '500', cursor: 'pointer', animation: 'fadeInUp 1s ease 0.6s forwards', opacity: 0 }}>
+    Explorer les Oeuvres
+  </button>
+</div>
 
       <div style={{ background: 'white', padding: '16px 32px', borderBottom: '1px solid #e0d8c8', display: 'flex', gap: '12px', alignItems: 'center' }}>
         <input type="text" placeholder="Rechercher une oeuvre..." style={{ flex: 1, border: '1px solid #ddd', borderRadius: '8px', padding: '10px 16px', fontSize: '14px', outline: 'none' }} />
@@ -67,7 +73,7 @@ function Accueil() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
             {oeuvres.map(oeuvre => (
-              <div key={oeuvre.id} onClick={() => navigate(`/oeuvre/${oeuvre.id}`)} style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer' }}>
+              <div key={oeuvre.id} className="card-hover" onClick={() => navigate(`/oeuvre/${oeuvre.id}`)} style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer' }}>
                 <div style={{ background: '#f5ede0', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '64px' }}>🎨</div>
                 <div style={{ padding: '14px' }}>
                   <div style={{ fontSize: '14px', fontWeight: '500', color: '#1a1a1a', marginBottom: '4px' }}>{oeuvre.titre}</div>
