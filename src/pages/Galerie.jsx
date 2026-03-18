@@ -31,7 +31,7 @@ function Galerie() {
   return (
     <div style={{ background: '#f7f3ec', minHeight: '100vh' }}>
 
-      <nav style={{ background: '#1a3a6b', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <nav className="nav-animate" style={{ background: '#1a3a6b', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <div style={{ width: '32px', height: '32px', background: '#f5c842', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🏺</div>
           <div style={{ color: '#f5c842', fontWeight: '500', fontSize: '18px' }}>Talents Cachés</div>
@@ -47,7 +47,7 @@ function Galerie() {
         </div>
       </nav>
 
-      <div style={{ background: '#1a3a6b', padding: '40px 32px', textAlign: 'center' }}>
+      <div style={{ background: '#1a3a6b', padding: '40px 32px', textAlign: 'center', animation: 'fadeInDown 0.8s ease forwards' }}>
         <h1 style={{ color: '#f5c842', fontSize: '28px', fontWeight: '600', marginBottom: '8px' }}>Galerie des Oeuvres</h1>
         <p style={{ color: '#a0b8d8', fontSize: '15px' }}>Découvrez les talents cachés du Maroc</p>
       </div>
@@ -67,7 +67,7 @@ function Galerie() {
           <span
             key={cat}
             onClick={() => setCategorieActive(cat)}
-            style={{ background: categorieActive === cat ? '#1a3a6b' : 'white', color: categorieActive === cat ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '7px 18px', fontSize: '13px', cursor: 'pointer' }}
+            style={{ background: categorieActive === cat ? '#1a3a6b' : 'white', color: categorieActive === cat ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '7px 18px', fontSize: '13px', cursor: 'pointer', transition: 'all 0.3s ease' }}
           >
             {cat}
           </span>
@@ -86,13 +86,12 @@ function Galerie() {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-            {oeuvresFiltrees.map(oeuvre => (
+            {oeuvresFiltrees.map((oeuvre, index) => (
               <div
                 key={oeuvre.id}
+                className="card-animate card-hover"
                 onClick={() => navigate(`/oeuvre/${oeuvre.id}`)}
-                style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s' }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer', animationDelay: `${index * 0.1}s` }}
               >
                 <div style={{ background: '#f5ede0', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '64px' }}>🎨</div>
                 <div style={{ padding: '14px' }}>
