@@ -25,6 +25,14 @@ function Accueil() {
     chargerDonnees()
   }, [])
 
+  const photos = [
+    'https://picsum.photos/seed/art1/400/300',
+    'https://picsum.photos/seed/art2/400/300',
+    'https://picsum.photos/seed/art3/400/300',
+    'https://picsum.photos/seed/art4/400/300',
+    'https://picsum.photos/seed/art5/400/300',
+  ]
+
   return (
     <div style={{ background: '#f7f3ec', minHeight: '100vh' }}>
 
@@ -46,16 +54,24 @@ function Accueil() {
         </div>
       </nav>
 
-      <div style={{ background: 'linear-gradient(rgba(26,58,107,0.75), rgba(26,58,107,0.75)), url(https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Essaouira_ramparts.jpg/1280px-Essaouira_ramparts.jpg) center/cover', padding: isMobile ? '40px 16px' : '80px 32px', textAlign: 'center' }}>
-        <h1 style={{ color: 'white', fontSize: isMobile ? '24px' : '36px', fontWeight: '600', maxWidth: '500px', margin: '0 auto 12px', animation: 'fadeInDown 1s ease forwards' }}>
-          L'Art Émergent du Maroc
-        </h1>
-        <p style={{ color: '#c8d8f0', fontSize: isMobile ? '14px' : '16px', marginBottom: '28px', animation: 'fadeInUp 1s ease 0.3s forwards', opacity: 0 }}>
-          Achetez des oeuvres originales à moins de 200 €
-        </p>
-        <button className="btn-pulse" onClick={() => navigate('/galerie')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: isMobile ? '12px 24px' : '14px 32px', borderRadius: '8px', fontSize: isMobile ? '14px' : '15px', fontWeight: '500', cursor: 'pointer', animation: 'fadeInUp 1s ease 0.6s forwards', opacity: 0 }}>
-          Explorer les Oeuvres
-        </button>
+      <div style={{ position: 'relative', height: isMobile ? '280px' : '420px', overflow: 'hidden' }}>
+        <img
+          src="/hero.png"
+          alt="Art marocain"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          onError={e => { e.target.parentNode.style.background = 'linear-gradient(135deg, #1a3a6b, #e85d2a)' }}
+        />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(26,58,107,0.55)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
+          <h1 style={{ color: 'white', fontSize: isMobile ? '24px' : '40px', fontWeight: '700', maxWidth: '600px', margin: '0 auto 12px', animation: 'fadeInDown 1s ease forwards' }}>
+            L'Art Émergent du Maroc
+          </h1>
+          <p style={{ color: '#f0e8d0', fontSize: isMobile ? '14px' : '18px', marginBottom: '28px', animation: 'fadeInUp 1s ease 0.3s forwards', opacity: 0 }}>
+            Achetez des oeuvres originales à moins de 200 €
+          </p>
+          <button className="btn-pulse" onClick={() => navigate('/galerie')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: isMobile ? '12px 24px' : '14px 36px', borderRadius: '8px', fontSize: isMobile ? '14px' : '16px', fontWeight: '600', cursor: 'pointer', animation: 'fadeInUp 1s ease 0.6s forwards', opacity: 0 }}>
+            Explorer les Oeuvres
+          </button>
+        </div>
       </div>
 
       <div style={{ background: 'white', padding: '16px', borderBottom: '1px solid #e0d8c8', display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -65,7 +81,7 @@ function Accueil() {
 
       <div style={{ background: 'white', padding: '12px 16px', display: 'flex', gap: '8px', borderBottom: '2px solid #e0d8c8', flexWrap: 'wrap' }}>
         {['Tout voir', 'Peintures', 'Sculptures', 'Artisanat', 'Photo', 'Calligraphie'].map((cat) => (
-          <span key={cat} onClick={() => setCategorieActive(cat)} style={{ background: categorieActive === cat ? '#1a3a6b' : 'white', color: categorieActive === cat ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
+          <span key={cat} onClick={() => setCategorieActive(cat)} style={{ background: categorieActive === cat ? '#1a3a6b' : 'white', color: categorieActive === cat ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
             {cat}
           </span>
         ))}
@@ -79,7 +95,14 @@ function Accueil() {
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3, 1fr)', gap: '12px' }}>
             {oeuvres.map((oeuvre, index) => (
               <div key={oeuvre.id} className="card-animate card-hover" onClick={() => navigate(`/oeuvre/${oeuvre.id}`)} style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer', animationDelay: `${index * 0.1}s` }}>
-                <div style={{ background: '#f5ede0', height: isMobile ? '120px' : '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? '40px' : '64px' }}>🎨</div>
+                <div style={{ height: isMobile ? '120px' : '200px', overflow: 'hidden', background: '#f5ede0' }}>
+                  <img
+                    src={photos[index % 5]}
+                    alt={oeuvre.titre}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={e => { e.target.style.display = 'none' }}
+                  />
+                </div>
                 <div style={{ padding: '10px' }}>
                   <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a1a1a', marginBottom: '4px' }}>{oeuvre.titre}</div>
                   <div style={{ fontSize: '11px', color: '#888', marginBottom: '8px' }}>{oeuvre.categorie}</div>
@@ -109,11 +132,11 @@ function Accueil() {
               </div>
             ))}
           </div>
-          <div style={{ background: '#fff8e8', borderRadius: '10px', border: '2px solid #f5c842', padding: '20px', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🎨</div>
-            <h3 style={{ color: '#1a3a6b', fontSize: '15px', fontWeight: '600', marginBottom: '8px' }}>Devenir Vendeur</h3>
-            <p style={{ fontSize: '12px', color: '#666', marginBottom: '14px' }}>Vous etes un artiste marocain ? Vendez vos oeuvres sur Talents Caches</p>
-            <button className="btn-pulse" onClick={() => navigate('/inscription')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', width: '100%' }}>Devenir Vendeur</button>
+          <div style={{ background: 'linear-gradient(135deg, #1a3a6b, #2d5a9e)', borderRadius: '10px', padding: '20px', textAlign: 'center', color: 'white' }}>
+            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🎨</div>
+            <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '8px', color: '#f5c842' }}>Devenir Vendeur</h3>
+            <p style={{ fontSize: '12px', color: '#c8d8f0', marginBottom: '16px', lineHeight: '1.5' }}>Vous êtes un artiste marocain ? Vendez vos oeuvres sur Talents Cachés</p>
+            <button className="btn-pulse" onClick={() => navigate('/inscription')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', width: '100%' }}>Devenir Vendeur</button>
           </div>
         </div>
       </div>
