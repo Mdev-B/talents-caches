@@ -84,3 +84,45 @@ body {
   transform: translateY(-8px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 16px !important;
+  }
+
+  nav > div:nth-child(2) {
+    display: none !important;
+  }
+
+  nav > div:last-child {
+    gap: 8px !important;
+  }
+
+  nav button {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  div[style*="repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  div[style*="repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  h1[style*="36px"] {
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+}
