@@ -5,6 +5,8 @@ import { supabase } from '../supabase'
 function Accueil() {
   const navigate = useNavigate()
   const [categorieActive, setCategorieActive] = useState('Tout voir')
+  const [prixActif, setPrixActif] = useState('Tout')
+  const [styleActif, setStyleActif] = useState('Tous')
   const [oeuvres, setOeuvres] = useState([])
   const [artistes, setArtistes] = useState([])
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -32,6 +34,16 @@ function Accueil() {
     'https://picsum.photos/seed/art4/400/300',
     'https://picsum.photos/seed/art5/400/300',
   ]
+
+  const oeuvresFiltrees = oeuvres.filter(o => {
+    const matchCategorie = categorieActive === 'Tout voir' || o.categorie === categorieActive.toLowerCase()
+    const matchPrix = prixActif === 'Tout' ||
+      (prixActif === '0-50€' && o.prix <= 50) ||
+      (prixActif === '50-100€' && o.prix > 50 && o.prix <= 100) ||
+      (prixActif === '100-200€' && o.prix > 100 && o.prix <= 200) ||
+      (prixActif === '200€+' && o.prix > 200)
+    return matchCategorie && matchPrix
+  })
 
   return (
     <div style={{ background: '#f7f3ec', minHeight: '100vh' }}>
@@ -79,7 +91,7 @@ function Accueil() {
         <button onClick={() => navigate('/galerie')} style={{ background: '#1a3a6b', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>🔍</button>
       </div>
 
-      <div style={{ background: 'white', padding: '12px 16px', display: 'flex', gap: '8px', borderBottom: '2px solid #e0d8c8', flexWrap: 'wrap' }}>
+      <div style={{ background: 'white', padding: '12px 16px', display: 'flex', gap: '8px', borderBottom: '1px solid #e0d8c8', flexWrap: 'wrap' }}>
         {['Tout voir', 'Peintures', 'Sculptures', 'Artisanat', 'Photo', 'Calligraphie'].map((cat) => (
           <span key={cat} onClick={() => setCategorieActive(cat)} style={{ background: categorieActive === cat ? '#1a3a6b' : 'white', color: categorieActive === cat ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
             {cat}
@@ -87,13 +99,28 @@ function Accueil() {
         ))}
       </div>
 
+      <div style={{ background: '#fafaf7', padding: '12px 16px', borderBottom: '2px solid #e0d8c8', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: '12px', color: '#5a3a10', fontWeight: '600' }}>Prix :</span>
+        {['Tout', '0-50€', '50-100€', '100-200€', '200€+'].map(prix => (
+          <span key={prix} onClick={() => setPrixActif(prix)} style={{ background: prixActif === prix ? '#e85d2a' : 'white', color: prixActif === prix ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '5px 10px', fontSize: '11px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
+            {prix}
+          </span>
+        ))}
+        <span style={{ fontSize: '12px', color: '#5a3a10', fontWeight: '600', marginLeft: '8px' }}>Style :</span>
+        {['Tous', 'Abstrait', 'Réaliste', 'Traditionnel', 'Moderne'].map(style => (
+          <span key={style} onClick={() => setStyleActif(style)} style={{ background: styleActif === style ? '#e85d2a' : 'white', color: styleActif === style ? 'white' : '#5a3a10', border: '1px solid #d8c890', borderRadius: '24px', padding: '5px 10px', fontSize: '11px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
+            {style}
+          </span>
+        ))}
+      </div>
+
       <div style={{ padding: isMobile ? '20px 16px' : '36px 32px' }}>
         <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1a1a1a', marginBottom: '16px', borderBottom: '3px solid #f5c842', paddingBottom: '8px', display: 'inline-block' }}>Nouvelles Oeuvres</h2>
-        {oeuvres.length === 0 ? (
+        {oeuvresFiltrees.length === 0 ? (
           <p style={{ color: '#888' }}>Aucune oeuvre pour le moment...</p>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3, 1fr)', gap: '12px' }}>
-            {oeuvres.map((oeuvre, index) => (
+            {oeuvresFiltrees.map((oeuvre, index) => (
               <div key={oeuvre.id} className="card-animate card-hover" onClick={() => navigate(`/oeuvre/${oeuvre.id}`)} style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', cursor: 'pointer', animationDelay: `${index * 0.1}s` }}>
                 <div style={{ height: isMobile ? '120px' : '200px', overflow: 'hidden', background: '#f5ede0' }}>
                   <img
