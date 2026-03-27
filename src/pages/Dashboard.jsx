@@ -7,32 +7,21 @@ function Dashboard() {
   const [artiste, setArtiste] = useState(null)
   const [oeuvres, setOeuvres] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     async function chargerDashboard() {
       const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        navigate('/connexion')
-        return
-      }
-
-      const { data: artisteData } = await supabase
-        .from('artists')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-
-      if (!artisteData) {
-        navigate('/connexion')
-        return
-      }
-
-      const { data: oeuvresData } = await supabase
-        .from('artworks')
-        .select('*')
-        .eq('artist_id', artisteData.id)
-
+      if (!user) { navigate('/connexion'); return }
+      const { data: artisteData } = await supabase.from('artists').select('*').eq('user_id', user.id).single()
+      if (!artisteData) { navigate('/connexion'); return }
+      const { data: oeuvresData } = await supabase.from('artworks').select('*').eq('artist_id', artisteData.id)
       setArtiste(artisteData)
       setOeuvres(oeuvresData || [])
       setLoading(false)
@@ -53,12 +42,12 @@ function Dashboard() {
   return (
     <div style={{ background: '#f7f3ec', minHeight: '100vh' }}>
 
-      <nav style={{ background: '#1a3a6b', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <nav className="nav-animate" style={{ background: '#1a3a6b', padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: '32px', height: '32px', background: '#f5c842', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🏺</div>
           <div style={{ color: '#f5c842', fontWeight: '500', fontSize: '18px' }}>Talents Cachés</div>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button onClick={() => navigate('/')} style={{ background: 'transparent', color: '#c8d8f0', border: 'none', cursor: 'pointer', fontSize: '14px' }}>Accueil</button>
           <button onClick={handleDeconnecter} style={{ background: 'transparent', color: '#f5c842', border: '1px solid #f5c842', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>Se déconnecter</button>
         </div>
@@ -66,48 +55,48 @@ function Dashboard() {
 
       <div style={{ maxWidth: '900px', margin: '40px auto', padding: '0 20px' }}>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div className="card-animate" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#1a3a6b', marginBottom: '4px' }}>Bonjour {artiste.nom} 🎨</h1>
+            <h1 style={{ fontSize: isMobile ? '20px' : '24px', fontWeight: '600', color: '#1a3a6b', marginBottom: '4px', animation: 'fadeInDown 0.8s ease forwards' }}>Bonjour {artiste.nom} 🎨</h1>
             <p style={{ color: '#888', fontSize: '14px' }}>Bienvenue sur ton tableau de bord</p>
           </div>
-          <button onClick={() => navigate('/publier')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: 'pointer' }}>
-            + Publier une oeuvre
-          </button>
-          <button onClick={() => navigate('/parametres')} style={{ background: 'transparent', color: '#1a3a6b', border: '1px solid #1a3a6b', padding: '12px 24px', borderRadius: '8px', fontSize: '14px', cursor: 'pointer', marginLeft: '12px' }}>
-  ⚙️ Mon Profil
-</button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button className="btn-pulse" onClick={() => navigate('/publier')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '12px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '500', cursor: 'pointer' }}>
+              + Publier
+            </button>
+            <button onClick={() => navigate('/parametres')} style={{ background: 'transparent', color: '#1a3a6b', border: '1px solid #1a3a6b', padding: '12px 20px', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}>
+              ⚙️ Profil
+            </button>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '40px' }}>
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '24px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', fontWeight: '700', color: '#1a3a6b' }}>{oeuvres.length}</div>
-            <div style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>Oeuvres publiées</div>
-          </div>
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '24px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', fontWeight: '700', color: '#1a3a6b' }}>{totalVentes}</div>
-            <div style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>Ventes</div>
-          </div>
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '24px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', fontWeight: '700', color: '#e85d2a' }}>{totalRevenus} €</div>
-            <div style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>Revenus</div>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '16px', marginBottom: '40px' }}>
+          {[
+            { valeur: oeuvres.length, label: 'Oeuvres publiées', couleur: '#1a3a6b' },
+            { valeur: totalVentes, label: 'Ventes', couleur: '#1a3a6b' },
+            { valeur: totalRevenus + ' €', label: 'Revenus', couleur: '#e85d2a' },
+          ].map((stat, index) => (
+            <div key={index} className="card-animate" style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '24px', textAlign: 'center', animationDelay: `${index * 0.15}s` }}>
+              <div style={{ fontSize: '36px', fontWeight: '700', color: stat.couleur, animation: 'scaleIn 0.6s ease forwards' }}>{stat.valeur}</div>
+              <div style={{ fontSize: '13px', color: '#888', marginTop: '4px' }}>{stat.label}</div>
+            </div>
+          ))}
         </div>
 
         <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1a1a1a', marginBottom: '16px', borderBottom: '3px solid #f5c842', paddingBottom: '8px', display: 'inline-block' }}>Mes Oeuvres</h2>
 
         {oeuvres.length === 0 ? (
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '40px', textAlign: 'center' }}>
+          <div className="card-animate" style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8d8b0', padding: '40px', textAlign: 'center' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎨</div>
             <p style={{ color: '#888', marginBottom: '16px' }}>Tu n'as pas encore publié d'oeuvre</p>
-            <button onClick={() => navigate('/publier')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}>
+            <button className="btn-pulse" onClick={() => navigate('/publier')} style={{ background: '#e85d2a', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}>
               Publier ma première oeuvre
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-            {oeuvres.map(oeuvre => (
-              <div key={oeuvre.id} style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3, 1fr)', gap: '16px' }}>
+            {oeuvres.map((oeuvre, index) => (
+              <div key={oeuvre.id} className="card-animate card-hover" style={{ background: 'white', borderRadius: '10px', border: '1px solid #e8d8b0', overflow: 'hidden', animationDelay: `${index * 0.1}s` }}>
                 <div style={{ background: '#f5ede0', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>🎨</div>
                 <div style={{ padding: '12px' }}>
                   <div style={{ fontSize: '14px', fontWeight: '500', color: '#1a1a1a', marginBottom: '4px' }}>{oeuvre.titre}</div>
